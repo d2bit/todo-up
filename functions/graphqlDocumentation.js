@@ -1,10 +1,9 @@
-const express = require('express')
-const { graphiqlExpress } = require('apollo-server-express')
+const { renderPlaygroundPage } = require('graphql-playground-html')
 
-const { fixPath } = require('./utils')
+const options = { version: '1.7.0', endpoint: '/graphql' }
 
-const app = express()
-
-app.get('/', graphiqlExpress({ endpointURL: '/graphql' }))
-
-module.exports = fixPath(app)
+module.exports = (req, res) => {
+  res.setHeader('Content-Type', 'text/html')
+  const playground = renderPlaygroundPage(options)
+  res.send(playground)
+}
