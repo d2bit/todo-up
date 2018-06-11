@@ -5,6 +5,7 @@ module.exports = `
     id: ID!
     email: String!
     username: String!
+    createdAt: Date
     todos: [Todo]!
   }
   input AddUserInput {
@@ -17,27 +18,24 @@ module.exports = `
     text: String!
     done: Boolean!
     user: User!
-    created_at: Date!
-    updated_at: Date!
+    createdAt: Date
+    updatedAt: Date
   }
   input AddTodoInput {
     text: String!
     userId: ID!
-  }
-  input MarkTodoDoneInput {
-    id: ID!
   }
 
   type Query {
     users: [User]!
     user(id: ID!): User!
     todos: [Todo]!
-    todo: Todo!
+    todo(id: ID!): Todo!
   }
 
   type Mutation {
     addUser(input: AddUserInput!): User
     addTodo(input: AddTodoInput!): Todo
-    markTodoDone(input: MarkTodoDoneInput!): Todo
+    markTodoDone(id: ID!): Todo
   }
 `

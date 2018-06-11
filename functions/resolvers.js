@@ -14,10 +14,10 @@ module.exports = {
         .then(docs =>
           docs.map(doc => Object.assign({ id: doc.id }, doc.data()))
         ),
-    user: (_, { input }) =>
+    user: (_, { id }) =>
       firestore
         .collection('users')
-        .doc(input.id)
+        .doc(id)
         .get()
         .then(doc => Object.assign({ id: doc.id }, doc.data())),
     todos: () =>
@@ -28,10 +28,10 @@ module.exports = {
         .then(docs =>
           docs.map(doc => Object.assign({ id: doc.id }, doc.data()))
         ),
-    todo: (_, { input }) =>
+    todo: (_, { id }) =>
       firestore
         .collection('todos')
-        .doc(input.id)
+        .doc(id)
         .get()
         .then(doc => Object.assign({ id: doc.id }, doc.data())),
   },
@@ -39,17 +39,64 @@ module.exports = {
     addUser: (_, { input }) =>
       firestore
         .collection('users')
-        .add(input)
-        .then(doc => Object.assign({ id: doc.id }, input)),
+        .add(
+          Object.assign(
+            { createdAt: admin.firestore.FieldValue.serverTimestamp() },
+            input
+          )
+        )
+        .then(docRef => docRef.get())
+        .then(doc => Object.assign({ id: doc.id }, doc.data())),
     addTodo: (_, { input }) =>
       firestore
         .collection('todos')
-        .add(input)
-        .then(doc => Object.assign({ id: doc.id }, input)),
-    markTodoDone: (_, { input }) =>
+        .add(
+          Object.assign(
+            {
+              done: false,
+              createdAt: admin.firestore.FieldValue.serverTimestamp(),
+            },
+            input
+          )
+        )
+        .then(docRef => docRef.get())
+        .then(doc => Object.assign({ id: doc.id }, doc.data())),
+    markTodoDone: (_, { id }) =>
       firestore
         .collection('todos')
-        .add(input)
-        .then(doc => Object.assign({ id: doc.id }, input)),
+        .doc(id)
+        .set(
+          {
+            done: true,
+            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+          },
+          { merge: true }
+        )
+        .then(() =>
+          firestore
+            .collection('todos')
+            .doc(id)
+            .get()
+        )
+        .then(doc => Object.assign({ id: doc.id }, doc.data())),
+  },
+  User: {
+    todos: user =>
+      firestore
+        .collection('todos')
+        .where('userId', '==', user.id)
+        .get()
+        .then(snapshot => snapshot.docs)
+        .then(docs =>
+          docs.map(doc => Object.assign({ id: doc.id }, doc.data()))
+        ),
+  },
+  Todo: {
+    user: todo =>
+      firestore
+        .collection('users')
+        .doc(todo.userId)
+        .get()
+        .then(doc => Object.assign({ id: doc.id }, doc.data())),
   },
 }
