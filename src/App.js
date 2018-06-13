@@ -1,21 +1,19 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
 
-class App extends Component {
+import TodoCreator from './components/TodoCreator'
+import TodoList from './components/TodoList'
+
+class App extends React.PureComponent {
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+      <div>
+        <h1>Todo UP!</h1>
+
+        <TodoCreator />
+        <TodoList />
       </div>
-    );
+    )
   }
 }
 
-export default App;
+export default App
