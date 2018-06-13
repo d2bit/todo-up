@@ -9,6 +9,7 @@ module.exports = {
     users: () =>
       firestore
         .collection('users')
+        .orderBy('username', 'asc')
         .get()
         .then(snapshot => snapshot.docs)
         .then(docs =>
@@ -23,6 +24,7 @@ module.exports = {
     todos: () =>
       firestore
         .collection('todos')
+        .orderBy('createdAt', 'asc')
         .get()
         .then(snapshot => snapshot.docs)
         .then(docs =>
