@@ -1,7 +1,27 @@
 import React from 'react'
 import { Query, Mutation } from 'react-apollo'
+import styled from 'react-emotion'
 
 import * as GQL from '../graphql'
+
+const Checkbox = styled('div')`
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  border: 1px solid black;
+  margin-right: 0.3rem;
+  ::before {
+    ${props =>
+      props.checked
+        ? `
+        content: '\\2714';
+        font-weight: bold;
+        color: green;
+        margin: auto;
+      `
+        : ''};
+  }
+`
 
 function Todo({ id }) {
   return (
@@ -38,14 +58,21 @@ function Todo({ id }) {
               }}
             >
               {toggleTodoDone => (
-                <input
-                  type="checkbox"
+                <Checkbox
                   checked={todo.done}
-                  onChange={event => {
+                  onClick={event => {
                     event.preventDefault()
                     const todoClone = Object.assign({}, todo)
                     toggleTodoDone({
                       variables: { id },
+                      optimisticResponse: {
+                        __typename: 'Mutation',
+                        todo: Object.assign(todoClone, {
+                          done: !todo.done,
+                          text: todo.text + '...',
+                          createdAt: new Date(),
+                        }),
+                      },
                     })
                   }}
                 />

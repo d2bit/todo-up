@@ -27,9 +27,19 @@ function TodoCreator() {
           const textInput = evt.target.children.text
           const text = textInput.value
           textInput.value = ''
-          addTodo({ variables: { input: { text, userId } } }).catch(
-            () => (textInput.value = text)
-          )
+          addTodo({
+            variables: { input: { text, userId } },
+            optimisticResponse: {
+              __typename: 'Mutation',
+              todo: {
+                __typename: 'Todo',
+                id: Math.floor(Math.random() * 100000),
+                done: false,
+                text,
+                createdAt: new Date(),
+              },
+            },
+          }).catch(() => (textInput.value = text))
         }
         return (
           <form onSubmit={handleSubmit}>
