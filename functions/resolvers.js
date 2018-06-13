@@ -41,12 +41,7 @@ module.exports = {
     addUser: (_, { input }) =>
       firestore
         .collection('users')
-        .add(
-          Object.assign(
-            { createdAt: admin.firestore.FieldValue.serverTimestamp() },
-            input
-          )
-        )
+        .add(Object.assign({ createdAt: new Date() }, input))
         .then(docRef => docRef.get())
         .then(doc => Object.assign({ id: doc.id }, doc.data())),
     addTodo: (_, { input }) =>
@@ -56,7 +51,7 @@ module.exports = {
           Object.assign(
             {
               done: false,
-              createdAt: admin.firestore.FieldValue.serverTimestamp(),
+              createdAt: new Date(),
             },
             input
           )
@@ -67,13 +62,14 @@ module.exports = {
       const todoRef = firestore.collection('todos').doc(id)
       return firestore.runTransaction(transaction =>
         transaction.get(todoRef).then(todo => {
+          const todoData = todo.data()
+          const done = !todoData.done
+          const updatedAt = new Date()
           transaction.update(todoRef, {
-            done: !todo.data().done,
-            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+            done,
+            updatedAt,
           })
-          return todoRef
-            .get()
-            .then(doc => Object.assign({ id: doc.id }, doc.data()))
+          return Object.assign(todoData, { id, done, updatedAt })
         })
       )
     },
@@ -84,7 +80,7 @@ module.exports = {
         .set(
           {
             done: true,
-            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+            updatedAt: new Date(),
           },
           { merge: true }
         )
