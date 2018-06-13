@@ -69,7 +69,7 @@ function Todo({ id }) {
                         __typename: 'Mutation',
                         todo: Object.assign(todoClone, {
                           done: !todo.done,
-                          text: todo.text + '...',
+                          text: todo.text,
                           createdAt: new Date(),
                         }),
                       },
