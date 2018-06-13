@@ -63,6 +63,20 @@ module.exports = {
         )
         .then(docRef => docRef.get())
         .then(doc => Object.assign({ id: doc.id }, doc.data())),
+    toggleTodoDone: (_, { id }) => {
+      const todoRef = firestore.collection('todos').doc(id)
+      return firestore.runTransaction(transaction =>
+        transaction.get(todoRef).then(todo => {
+          transaction.update(todoRef, {
+            done: !todo.data().done,
+            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+          })
+          return todoRef
+            .get()
+            .then(doc => Object.assign({ id: doc.id }, doc.data()))
+        })
+      )
+    },
     markTodoDone: (_, { id }) =>
       firestore
         .collection('todos')

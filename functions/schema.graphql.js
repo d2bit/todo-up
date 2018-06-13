@@ -36,6 +36,7 @@ module.exports = `
   type Mutation {
     addUser(input: AddUserInput!): User
     addTodo(input: AddTodoInput!): Todo
+    toggleTodoDone(id: ID!): Todo
     markTodoDone(id: ID!): Todo
   }
 `
