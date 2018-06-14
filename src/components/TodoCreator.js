@@ -1,7 +1,30 @@
 import React from 'react'
 import { Mutation } from 'react-apollo'
+import styled from 'react-emotion'
 
 import * as GQL from '../graphql'
+
+const Frame = styled('div')`
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  flex-basis: 100%;
+  margin: 0.3rem;
+  box-shadow: 3px 3px 5px #ccc;
+`
+const Input = styled('input')`
+  font-size: 1.2rem;
+  color: #555;
+  border: 1px solid #ccc;
+  padding: 0.2rem;
+`
+const Button = styled('button')`
+  font-size: 1.2rem;
+  color: #333;
+  background-color: #eee;
+  border: 1px solid #ccc;
+  padding: 0.2rem 1rem;
+`
 
 function TodoCreator() {
   return (
@@ -42,10 +65,12 @@ function TodoCreator() {
           }).catch(() => (textInput.value = text))
         }
         return (
-          <form onSubmit={handleSubmit}>
-            <input name="text" />
-            <input type="submit" value="Add" />
-          </form>
+          <Frame>
+            <form onSubmit={handleSubmit}>
+              <Input name="text" />
+              <Button type="submit">Add</Button>
+            </form>
+          </Frame>
         )
       }}
     </Mutation>

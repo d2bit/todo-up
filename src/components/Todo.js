@@ -3,12 +3,20 @@ import { Query, Mutation } from 'react-apollo'
 import styled from 'react-emotion'
 
 import * as GQL from '../graphql'
+import { formatDate } from '../utils'
 
+const Frame = styled('div')`
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  flex-basis: 100%;
+  margin: 0.3rem;
+`
 const Checkbox = styled('div')`
   display: inline-block;
   width: 1rem;
   height: 1rem;
-  border: 1px solid black;
+  border: 1px solid #555;
   margin-right: 0.3rem;
   ::before {
     ${props =>
@@ -21,6 +29,18 @@ const Checkbox = styled('div')`
       `
         : ''};
   }
+`
+const Title = styled('span')`
+  line-height: 1rem;
+  font-size: 1.1rem;
+  color: #333;
+  margin: 0.3rem;
+`
+const Subtitle = styled('span')`
+  font-size: 0.7rem;
+  margin: 0.3rem;
+  color: rgb(100, 150, 200);
+  align-self: flex-end;
 `
 
 function Todo({ id }) {
@@ -35,29 +55,29 @@ function Todo({ id }) {
         }
 
         return (
-          <div>
-            <Mutation
-              mutation={GQL.TOGGLE_TODO_DONE}
-              update={(cache, { data: { todo } }) => {
-                const { todos } = cache.readQuery({ query: GQL.GET_TODOS })
-                const updatedTodos = todos.map(cachedTodo => {
-                  if (cachedTodo.id === id) {
-                    return todo
-                  }
-                  return cachedTodo
-                })
-                cache.writeQuery({
-                  query: GQL.GET_TODOS,
-                  data: { todos: updatedTodos },
-                })
-                cache.writeQuery({
-                  query: GQL.GET_TODO,
-                  variables: { id },
-                  data: { todo: todo },
-                })
-              }}
-            >
-              {toggleTodoDone => (
+          <Mutation
+            mutation={GQL.TOGGLE_TODO_DONE}
+            update={(cache, { data: { todo } }) => {
+              const { todos } = cache.readQuery({ query: GQL.GET_TODOS })
+              const updatedTodos = todos.map(cachedTodo => {
+                if (cachedTodo.id === id) {
+                  return todo
+                }
+                return cachedTodo
+              })
+              cache.writeQuery({
+                query: GQL.GET_TODOS,
+                data: { todos: updatedTodos },
+              })
+              cache.writeQuery({
+                query: GQL.GET_TODO,
+                variables: { id },
+                data: { todo: todo },
+              })
+            }}
+          >
+            {toggleTodoDone => (
+              <Frame>
                 <Checkbox
                   checked={todo.done}
                   onClick={event => {
@@ -76,10 +96,11 @@ function Todo({ id }) {
                     })
                   }}
                 />
-              )}
-            </Mutation>
-            <span>{todo.text}</span>
-          </div>
+                <Title>{todo.text}</Title>
+                <Subtitle>{formatDate(todo.createdAt)}</Subtitle>
+              </Frame>
+            )}
+          </Mutation>
         )
       }}
     </Query>

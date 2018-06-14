@@ -1,8 +1,16 @@
 import React from 'react'
 import { Query } from 'react-apollo'
+import styled from 'react-emotion'
 
 import * as GQL from '../graphql'
 import Todo from './Todo'
+
+const Frame = styled('div')`
+  display: flex;
+  flex-flow: row wrap;
+  align-items: left;
+  margin: 1rem 1rem 0;
+`
 
 function TodoList() {
   function cacheTodoElements(cache, collection) {
@@ -24,13 +32,9 @@ function TodoList() {
         cacheTodoElements(client.cache, todos)
 
         return (
-          <ul>
-            {todos.map(todo => (
-              <li key={todo.id}>
-                <Todo id={todo.id} />
-              </li>
-            ))}
-          </ul>
+          <Frame>
+            {todos.map(todo => <Todo key={todo.id} id={todo.id} />)}
+          </Frame>
         )
       }}
     </Query>
