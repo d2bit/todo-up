@@ -48,7 +48,12 @@ function TodoCreator() {
           evt.preventDefault()
           const userId = '8BGVuT9gIpTxkh3roBn5'
           const textInput = evt.target.children.text
-          const text = textInput.value
+          const text = textInput.value.trim()
+          const isEmptyText = !text
+          if (isEmptyText) {
+            return false
+          }
+
           textInput.value = ''
           addTodo({
             variables: { input: { text, userId } },
