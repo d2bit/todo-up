@@ -1,15 +1,20 @@
 import React from 'react'
 import { Query } from 'react-apollo'
-import styled from 'react-emotion'
+import styled, { css } from 'react-emotion'
 
 import * as GQL from '../graphql'
 import Todo from './Todo'
+import Spinner from './Spinner'
 
 const Frame = styled('div')`
   display: flex;
   flex-flow: row wrap;
   align-items: left;
   margin: 1rem 1rem 0;
+`
+const spinnerCSS = css`
+  margin-top: 2rem;
+  width: 50%;
 `
 
 function TodoList() {
@@ -27,7 +32,13 @@ function TodoList() {
     <Query query={GQL.GET_TODOS}>
       {({ loading, error, client, data: { todos } }) => {
         if (loading) {
-          return <h2>Loading...</h2>
+          return (
+            <Spinner
+              className={css`
+                ${spinnerCSS};
+              `}
+            />
+          )
         }
         cacheTodoElements(client.cache, todos)
 

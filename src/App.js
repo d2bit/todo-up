@@ -12,9 +12,11 @@ const Frame = styled('div')`
   width: 90%;
   box-shadow: 2px 2px 10px;
   padding: 1rem 0;
+  min-height: 500px;
 
   @media (min-width: 540px) {
     max-width: 500px;
+    min-height: 800px;
   }
 `
 const Title = styled('h1')`
