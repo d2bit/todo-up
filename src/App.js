@@ -7,8 +7,9 @@ import TodoList from './components/TodoList'
 const Frame = styled('div')`
   display: flex;
   flex-flow: row wrap;
-  align-items: center;
   margin: 1rem auto;
+  justify-content: center;
+  align-content: start;
   width: 90%;
   box-shadow: 2px 2px 10px;
   padding: 1rem 0;

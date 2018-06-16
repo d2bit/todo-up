@@ -10,7 +10,6 @@ const Frame = styled('div')`
   max-width: 100%;
   display: flex;
   flex-flow: row wrap;
-  align-items: left;
   margin: 1rem 1rem 0;
 `
 const spinnerCSS = css`
