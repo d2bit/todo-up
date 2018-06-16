@@ -6,7 +6,7 @@ import TodoList from './components/TodoList'
 
 const Frame = styled('div')`
   display: flex;
-  flex-flow: column wrap;
+  flex-flow: row wrap;
   align-items: center;
   margin: 1rem auto;
   width: 90%;
@@ -21,8 +21,7 @@ const Frame = styled('div')`
 `
 const Title = styled('h1')`
   padding: 0;
-  margin: 0;
-  margin-bottom: 1rem;
+  margin: 0 auto 1rem;
   color: #333;
 `
 

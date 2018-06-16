@@ -1,19 +1,29 @@
 import React from 'react'
 import { Query, Mutation } from 'react-apollo'
-import styled from 'react-emotion'
+import styled, { css } from 'react-emotion'
 
 import * as GQL from '../graphql'
 import { formatDate } from '../utils'
+import EditIcon from './EditIcon'
 
 const Frame = styled('div')`
   display: flex;
   flex-flow: row wrap;
   align-items: center;
+  justify-content: space-between;
   flex-basis: 100%;
   margin: 0.3rem;
 `
+const Element = styled('div')`
+  display: flex;
+  flex-basis: 90%;
+  flex-flow: row nowrap;
+`
+const Controls = styled('div')``
 const Checkbox = styled('div')`
   display: inline-block;
+  flex-shrink: 0;
+  align-self: center;
   width: 1rem;
   height: 1rem;
   border: 1px solid #555;
@@ -35,12 +45,17 @@ const Title = styled('span')`
   font-size: 1.1rem;
   color: #333;
   margin: 0.3rem;
+  flex-grow: 1;
 `
 const Subtitle = styled('span')`
   font-size: 0.7rem;
   margin: 0.3rem;
   color: rgb(100, 150, 200);
   align-self: flex-end;
+`
+const iconCSS = css`
+  align-self: right;
+  width: 1rem;
 `
 
 function Todo({ id }) {
@@ -78,26 +93,37 @@ function Todo({ id }) {
           >
             {toggleTodoDone => (
               <Frame>
-                <Checkbox
-                  checked={todo.done}
-                  onClick={event => {
-                    event.preventDefault()
-                    const todoClone = Object.assign({}, todo)
-                    toggleTodoDone({
-                      variables: { id },
-                      optimisticResponse: {
-                        __typename: 'Mutation',
-                        todo: Object.assign(todoClone, {
-                          done: !todo.done,
-                          text: todo.text,
-                          createdAt: new Date(),
-                        }),
-                      },
-                    })
-                  }}
-                />
-                <Title>{todo.text}</Title>
-                <Subtitle>{formatDate(todo.createdAt)}</Subtitle>
+                <Element>
+                  <Checkbox
+                    checked={todo.done}
+                    onClick={event => {
+                      event.preventDefault()
+                      const todoClone = Object.assign({}, todo)
+                      toggleTodoDone({
+                        variables: { id },
+                        optimisticResponse: {
+                          __typename: 'Mutation',
+                          todo: Object.assign(todoClone, {
+                            done: !todo.done,
+                            text: todo.text,
+                            createdAt: new Date(),
+                          }),
+                        },
+                      })
+                    }}
+                  />
+                  <Title>
+                    {todo.text}
+                    <Subtitle>{formatDate(todo.createdAt)}</Subtitle>
+                  </Title>
+                </Element>
+                <Controls>
+                  <EditIcon
+                    className={css`
+                      ${iconCSS};
+                    `}
+                  />
+                </Controls>
               </Frame>
             )}
           </Mutation>

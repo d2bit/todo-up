@@ -5,18 +5,26 @@ import styled from 'react-emotion'
 import * as GQL from '../graphql'
 
 const Frame = styled('div')`
-  display: flex;
-  flex-flow: row wrap;
-  align-items: center;
   flex-basis: 100%;
   margin: 0.3rem;
   box-shadow: 3px 3px 5px #ccc;
+
+  @media (min-width: 540px) {
+    flex-basis: 80%;
+    margin: 0.3rem auto;
+  }
+`
+const Form = styled('form')`
+  display: flex;
+  flex-flow: row nowrap;
 `
 const Input = styled('input')`
   font-size: 1.2rem;
   color: #555;
   border: 1px solid #ccc;
   padding: 0.2rem;
+  flex-grow: 1;
+  width: 100px;
 `
 const Button = styled('button')`
   font-size: 1.2rem;
@@ -71,10 +79,10 @@ function TodoCreator() {
         }
         return (
           <Frame>
-            <form onSubmit={handleSubmit}>
+            <Form onSubmit={handleSubmit}>
               <Input name="text" />
               <Button type="submit">Add</Button>
-            </form>
+            </Form>
           </Frame>
         )
       }}

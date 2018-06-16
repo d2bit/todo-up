@@ -7,6 +7,7 @@ import Todo from './Todo'
 import Spinner from './Spinner'
 
 const Frame = styled('div')`
+  max-width: 100%;
   display: flex;
   flex-flow: row wrap;
   align-items: left;
