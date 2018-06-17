@@ -1,8 +1,7 @@
 import React from 'react'
-import { Query, Mutation } from 'react-apollo'
+import { Mutation } from 'react-apollo'
 
 import * as GQL from '../graphql'
-import { formatDate } from '../utils'
 import View from '../views/TodoListItem'
 
 function TodoListItem({ todo }) {
