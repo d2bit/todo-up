@@ -1,8 +1,11 @@
 import React from 'react'
+import { Switch, Route } from 'react-router-dom'
 import styled from 'react-emotion'
 
+import EditTodo from './components/EditTodo'
 import TodoCreator from './components/TodoCreator'
 import TodoList from './components/TodoList'
+import Todo from './components/Todo'
 
 const Frame = styled('div')`
   display: flex;
@@ -32,8 +35,9 @@ class App extends React.PureComponent {
       <Frame>
         <Title>Todo UP!</Title>
 
-        <TodoCreator />
-        <TodoList />
+        <Route component={EditTodo} />
+        <Route component={TodoCreator} />
+        <Route component={TodoList} />
       </Frame>
     )
   }

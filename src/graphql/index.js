@@ -19,6 +19,7 @@ export const GET_TODO = gql`
       text
       done
       createdAt
+      updatedAt
     }
   }
 `

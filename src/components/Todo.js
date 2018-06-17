@@ -4,15 +4,14 @@ import styled, { css } from 'react-emotion'
 
 import * as GQL from '../graphql'
 import { formatDate } from '../utils'
-import EditIcon from './EditIcon'
 
 const Frame = styled('div')`
   display: flex;
   flex-flow: row wrap;
   align-items: center;
   justify-content: space-between;
-  flex-basis: 100%;
-  margin: 0.3rem;
+  margin: auto;
+  background-color: #ccc;
 `
 const Element = styled('div')`
   display: flex;
@@ -53,20 +52,14 @@ const Subtitle = styled('span')`
   color: rgb(100, 150, 200);
   align-self: flex-end;
 `
-const iconCSS = css`
-  align-self: right;
-  width: 1rem;
-`
 
-function Todo({ id }) {
+function Todo({ id = '24GoSyc0K0zltl3ImDrd' }) {
+  console.log('id', id)
   return (
     <Query query={GQL.GET_TODO} variables={{ id }}>
       {({ loading, error, data: { todo } }) => {
         if (loading) {
           return <h2>Loading...</h2>
-        }
-        if (error) {
-          return <pre>{JSON.stringify(error)}</pre>
         }
 
         return (
@@ -83,11 +76,6 @@ function Todo({ id }) {
               cache.writeQuery({
                 query: GQL.GET_TODOS,
                 data: { todos: updatedTodos },
-              })
-              cache.writeQuery({
-                query: GQL.GET_TODO,
-                variables: { id },
-                data: { todo: todo },
               })
             }}
           >
@@ -106,24 +94,19 @@ function Todo({ id }) {
                           todo: Object.assign(todoClone, {
                             done: !todo.done,
                             text: todo.text,
-                            createdAt: new Date(),
+                            // description: todo.description,
+                            createdAt: todo.createdAt,
+                            updatedAt: new Date(),
                           }),
                         },
                       })
                     }}
                   />
-                  <Title>
-                    {todo.text}
-                    <Subtitle>{formatDate(todo.createdAt)}</Subtitle>
-                  </Title>
+                  <Title>Title</Title>
+                  <Subtitle>{todo.text}</Subtitle>
+                  <Title>Created at</Title>
+                  <Subtitle>{formatDate(todo.createdAt)}</Subtitle>
                 </Element>
-                <Controls>
-                  <EditIcon
-                    className={css`
-                      ${iconCSS};
-                    `}
-                  />
-                </Controls>
               </Frame>
             )}
           </Mutation>
