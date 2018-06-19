@@ -29,7 +29,8 @@ module.exports = {
         .then(snapshot => snapshot.docs)
         .then(docs =>
           docs.map(doc => Object.assign({ id: doc.id }, doc.data()))
-        ),
+        )
+        .then(docs => docs.filter(doc => !doc.deleted)),
     todo: (_, { id }) =>
       firestore
         .collection('todos')
@@ -121,6 +122,23 @@ module.exports = {
         })
       )
     },
+    deleteTodo: (_, { id }) => {
+      const deleteAttributes = {
+        deleted: true,
+        deletedAt: new Date(),
+      }
+      const todoRef = firestore.collection('todos').doc(id)
+      return firestore.runTransaction(transaction =>
+        transaction.get(todoRef).then(todo => {
+          const todoData = todo.data()
+          if (!todoData.deleted) {
+            transaction.update(todoRef, deleteAttributes)
+          }
+
+          return Object.assign(todoData, { id, deleted: true })
+        })
+      )
+    },
   },
   User: {
     todos: user =>
@@ -141,5 +159,6 @@ module.exports = {
         .get()
         .then(doc => Object.assign({ id: doc.id }, doc.data())),
     done: todo => !!todo.done,
+    deleted: todo => !!todo.deleted,
   },
 }

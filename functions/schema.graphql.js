@@ -18,10 +18,12 @@ module.exports = `
     text: String!
     description: String
     done: Boolean!
-    user: User!
+    doneAt: Date
+    deleted: Boolean!
+    deletedAt: Date
     createdAt: Date
     updatedAt: Date
-    doneAt: Date
+    user: User!
   }
   input AddTodoInput {
     text: String!
@@ -47,5 +49,6 @@ module.exports = `
     toggleTodoDone(id: ID!): Todo
     markTodoDone(id: ID!): Todo
     updateTodo(input: UpdateTodoInput!): Todo
+    deleteTodo(id: ID!): Todo
   }
 `
