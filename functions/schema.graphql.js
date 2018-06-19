@@ -16,14 +16,22 @@ module.exports = `
   type Todo {
     id: ID!
     text: String!
+    description: String
     done: Boolean!
     user: User!
     createdAt: Date
     updatedAt: Date
+    doneAt: Date
   }
   input AddTodoInput {
     text: String!
     userId: ID!
+  }
+  input UpdateTodoInput {
+    id: ID!
+    text: String
+    description: String
+    done: Boolean
   }
 
   type Query {
@@ -38,5 +46,6 @@ module.exports = `
     addTodo(input: AddTodoInput!): Todo
     toggleTodoDone(id: ID!): Todo
     markTodoDone(id: ID!): Todo
+    updateTodo(input: UpdateTodoInput!): Todo
   }
 `

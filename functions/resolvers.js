@@ -91,6 +91,36 @@ module.exports = {
             .get()
         )
         .then(doc => Object.assign({ id: doc.id }, doc.data())),
+    updateTodo: (_, { input }) => {
+      const updateAttributes = {}
+      const todoRef = firestore.collection('todos').doc(input.id)
+      return firestore.runTransaction(transaction =>
+        transaction.get(todoRef).then(todo => {
+          const todoData = todo.data()
+          if (input.done !== undefined && !!input.done !== !!todoData.done) {
+            updateAttributes.done = !!input.done
+            if (!todoData.done && !todoData.doneAt) {
+              updateAttributes.doneAt = new Date()
+            }
+          }
+          if (input.text !== undefined && input.text !== todoData.text) {
+            updateAttributes.text = input.text
+          }
+          if (input.description && input.description !== todoData.description) {
+            updateAttributes.description = input.description
+          }
+          if (Object.keys(updateAttributes).length) {
+            updateAttributes.updatedAt = new Date()
+            transaction.update(todoRef, updateAttributes)
+          }
+
+          return Object.assign(
+            todoData,
+            Object.assign({ id: input.id }, updateAttributes)
+          )
+        })
+      )
+    },
   },
   User: {
     todos: user =>
@@ -110,5 +140,6 @@ module.exports = {
         .doc(todo.userId)
         .get()
         .then(doc => Object.assign({ id: doc.id }, doc.data())),
+    done: todo => !!todo.done,
   },
 }
