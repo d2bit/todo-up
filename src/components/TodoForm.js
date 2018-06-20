@@ -5,6 +5,7 @@ import styled, { css } from 'react-emotion'
 import * as GQL from '../graphql'
 import { formatDate } from '../utils'
 import Toggle from './Toggle'
+import Spinner from '../views/Spinner'
 
 const Frame = styled('div')`
   display: flex;
@@ -32,17 +33,10 @@ const Title = styled('span')`
   margin: 0.3rem;
   flex-basis: 30%;
 `
-const Subtitle = styled('span')`
-  font-size: 0.7rem;
-  margin: 0.3rem;
-  color: rgb(100, 150, 200);
-  align-self: flex-end;
-`
 const Input = styled('input')`
   border: 1px solid #ccc;
   flex-grow: 1;
 `
-
 const Controls = styled('div')`
   display: flex;
   flex-flow: row nowrap;
@@ -60,26 +54,9 @@ const Button = styled('button')`
     color: #ccc;
   }
 `
-
-const Checkbox = styled('div')`
-  display: inline-block;
-  flex-shrink: 0;
-  align-self: center;
-  width: 1rem;
-  height: 1rem;
-  border: 1px solid #555;
-  margin-right: 0.3rem;
-  ::before {
-    ${props =>
-      props.checked
-        ? `
-        content: '\\2714';
-        font-weight: bold;
-        color: green;
-        margin: auto;
-      `
-        : ''};
-  }
+const spinnerCSS = css`
+  margin: auto;
+  width: 50%;
 `
 
 class TodoForm extends React.PureComponent {
@@ -98,7 +75,13 @@ class TodoForm extends React.PureComponent {
       <Query query={GQL.GET_TODO} variables={{ id }}>
         {({ loading, error, data: { todo } }) => {
           if (loading) {
-            return <h2>Loading...</h2>
+            return (
+              <Spinner
+                className={css`
+                  ${spinnerCSS};
+                `}
+              />
+            )
           }
 
           return (
