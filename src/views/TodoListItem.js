@@ -1,5 +1,6 @@
 import React from 'react'
 import styled, { css } from 'react-emotion'
+import { Link } from 'react-router-dom'
 
 import { formatDate } from '../utils'
 import EditIcon from './EditIcon'
@@ -72,11 +73,13 @@ function TodoListItem({ id, text, done, createdAt, toggleFn = () => {} }) {
         </Title>
       </Element>
       <Controls>
-        <EditIcon
-          className={css`
-            ${iconCSS};
-          `}
-        />
+        <Link to={`/todos/${id}`}>
+          <EditIcon
+            className={css`
+              ${iconCSS};
+            `}
+          />
+        </Link>
       </Controls>
     </Frame>
   )

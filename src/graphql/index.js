@@ -17,6 +17,7 @@ export const GET_TODO = gql`
     todo(id: $id) {
       id
       text
+      description
       done
       createdAt
       updatedAt
@@ -43,6 +44,19 @@ export const TOGGLE_TODO_DONE = gql`
       text
       done
       createdAt
+    }
+  }
+`
+
+export const UPDATE_TODO = gql`
+  mutation updateTodo($input: UpdateTodoInput!) {
+    todo: updateTodo(input: $input) {
+      id
+      text
+      description
+      done
+      createdAt
+      updatedAt
     }
   }
 `

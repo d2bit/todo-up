@@ -5,7 +5,6 @@ import styled from 'react-emotion'
 import EditTodo from './components/EditTodo'
 import TodoCreator from './components/TodoCreator'
 import TodoList from './components/TodoList'
-import Todo from './components/Todo'
 
 const Frame = styled('div')`
   display: flex;
@@ -29,18 +28,16 @@ const Title = styled('h1')`
   color: #333;
 `
 
-class App extends React.PureComponent {
-  render() {
-    return (
-      <Frame>
-        <Title>Todo UP!</Title>
+const App = () => {
+  return (
+    <Frame>
+      <Title>Todo UP!</Title>
 
-        <Route component={EditTodo} />
-        <Route component={TodoCreator} />
-        <Route component={TodoList} />
-      </Frame>
-    )
-  }
+      <Route path="/todos/:id" component={EditTodo} />
+      <Route component={TodoCreator} />
+      <Route component={TodoList} />
+    </Frame>
+  )
 }
 
 export default App
