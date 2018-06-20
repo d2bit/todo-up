@@ -102,70 +102,104 @@ class TodoForm extends React.PureComponent {
               }}
             >
               {updateTodo => (
-                <Frame onClick={event => event.stopPropagation()}>
-                  <Element>
-                    <Field>
-                      <Title>Title</Title>
-                      <Input
-                        innerRef={this.titleRef}
-                        defaultValue={todo.text}
-                      />
-                    </Field>
-                    <Field>
-                      <Title>Description</Title>
-                      <Input
-                        innerRef={this.descriptionRef}
-                        defaultValue={todo.description}
-                      />
-                    </Field>
-                    <Field>
-                      <Title>Created at</Title>
-                      <Input
-                        disabled
-                        innerRef={this.createdAtRef}
-                        type="date"
-                        defaultValue={formatDate(todo.createdAt)}
-                      />
-                    </Field>
-                  </Element>
-                  <Controls>
-                    <Field>
-                      <Title>Done</Title>
-                      <Toggle innerRef={this.doneRef} checked={todo.done} />
-                    </Field>
-                    <Button
-                      onClick={event => {
-                        const todoClone = Object.assign({}, todo)
-                        const text = this.titleRef.current.value
-                        const description = this.descriptionRef.current.value
-                        const done = this.doneRef.current.checked
-                        if (
-                          text === todo.text &&
-                          description === (todo.description || '') &&
-                          done === todo.done
-                        ) {
-                          return
-                        }
-                        const input = { id, text, description, done }
-                        updateTodo({
-                          variables: { input },
-                          optimisticResponse: {
-                            __typename: 'Mutation',
-                            todo: Object.assign(todoClone, {
-                              done,
-                              text,
-                              description,
-                              updatedAt: new Date(),
-                            }),
-                          },
-                        })
-                        this.props.closeFn()
-                      }}
-                    >
-                      Save
-                    </Button>
-                  </Controls>
-                </Frame>
+                <Mutation
+                  mutation={GQL.DELETE_TODO}
+                  update={(cache, { data: { todo } }) => {
+                    const { todos } = cache.readQuery({ query: GQL.GET_TODOS })
+                    const updatedTodos = todos.filter(
+                      cachedTodo => cachedTodo.id !== id
+                    )
+                    cache.writeQuery({
+                      query: GQL.GET_TODOS,
+                      data: { todos: updatedTodos },
+                    })
+                  }}
+                >
+                  {deleteTodo => (
+                    <Frame onClick={event => event.stopPropagation()}>
+                      <Element>
+                        <Field>
+                          <Title>Title</Title>
+                          <Input
+                            innerRef={this.titleRef}
+                            defaultValue={todo.text}
+                          />
+                        </Field>
+                        <Field>
+                          <Title>Description</Title>
+                          <Input
+                            innerRef={this.descriptionRef}
+                            defaultValue={todo.description}
+                          />
+                        </Field>
+                        <Field>
+                          <Title>Created at</Title>
+                          <Input
+                            disabled
+                            innerRef={this.createdAtRef}
+                            type="date"
+                            defaultValue={formatDate(todo.createdAt)}
+                          />
+                        </Field>
+                      </Element>
+                      <Controls>
+                        <Field>
+                          <Title>Done</Title>
+                          <Toggle innerRef={this.doneRef} checked={todo.done} />
+                        </Field>
+                        <Button
+                          onClick={event => {
+                            const todoClone = Object.assign({}, todo)
+                            deleteTodo({
+                              variables: { id },
+                              optimisticResponse: {
+                                __typename: 'Mutation',
+                                todo: Object.assign(todoClone, {
+                                  updatedAt: new Date(),
+                                }),
+                              },
+                            })
+                            this.props.closeFn()
+                          }}
+                        >
+                          Delete
+                        </Button>
+                        <Button
+                          onClick={event => {
+                            const todoClone = Object.assign({}, todo)
+                            const text = this.titleRef.current.value
+                            const description = this.descriptionRef.current
+                              .value
+                            const done = this.doneRef.current.checked
+                            if (
+                              text === todo.text &&
+                              description === (todo.description || '') &&
+                              done === todo.done
+                            ) {
+                              return
+                            }
+                            const input = { id, text, description, done }
+                            updateTodo({
+                              variables: { input },
+                              optimisticResponse: {
+                                __typename: 'Mutation',
+                                todo: Object.assign(todoClone, {
+                                  done,
+                                  text,
+                                  description,
+                                  updatedAt: new Date(),
+                                }),
+                              },
+                            })
+                            this.props.closeFn()
+                          }}
+                        >
+                          Save
+                        </Button>
+                      </Controls>
+                    </Frame>
+                  )}
+                </Mutation>
               )}
             </Mutation>
           )
