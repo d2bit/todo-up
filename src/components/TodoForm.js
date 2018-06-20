@@ -137,7 +137,6 @@ class TodoForm extends React.PureComponent {
                           <Input
                             disabled
                             innerRef={this.createdAtRef}
-                            type="date"
                             defaultValue={formatDate(todo.createdAt)}
                           />
                         </Field>
